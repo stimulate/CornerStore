@@ -12,6 +12,7 @@
   "author": "Parvez",
   "license": "MIT",
   "devDependencies": {
+    "moment": "^2.22.2",
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.10",
     "aspnet-webpack": "^3.0.0",
@@ -35,7 +36,7 @@
     "jquery": "^3.3.1",
     "js-cookie": "^2.2.0",
     "node-sass": "^4.9.2",
-    "popper.js": "^1.14.3",
+    "popper.js": "^1.14.4",
     "prop-types": "^15.6.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
@@ -49,6 +50,8 @@
     "webpack-hot-middleware": "^2.22.2"
   },
   "dependencies": {
-    "react-bootstrap": "^0.32.4"
+    "dot": "^1.1.2",
+    "react-bootstrap": "^0.32.4",
+    "react-datepicker": "^1.7.0"
   }
 }

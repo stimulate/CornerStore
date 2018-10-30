@@ -1,11 +1,12 @@
 ﻿const env = process.env.NODE_ENV;
+
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
-    mode: 'development',
+    mode: "development",
     entry: {
         app: './ReactScript/index.js'
     },
@@ -37,14 +38,11 @@ module.exports = {
         ]
     },
     plugins: [
-        new webpack.DefinePlugin({
-            BLOG_API: JSON.stringify('http://localhost:58830')
-        }),
         new webpack.ProvidePlugin({
             $: 'jquery',
             jQuery: 'jquery',
             'window.jQuery': 'jquery',
-            Popper: ['popper.js', 'default']
+            Popper: ['Popper.js', 'default']
         }),
         new ExtractTextPlugin(
             { filename: 'style.bundle.css', disable: false, allChunks: true }

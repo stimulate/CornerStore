@@ -4,7 +4,7 @@ import './style/myStyle.css';
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import App from './Component/App.jsx';
-import 'bootstrap/dist/js/bootstrap.js'
+import 'bootstrap/dist/js/bootstrap.js';
 
 
 function renderApp() {
