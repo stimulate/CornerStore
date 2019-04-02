@@ -1,5 +1,8 @@
 ﻿// ./src/common/main.component.jsx
 import React, { Component } from 'react';
+import Customer from './Customer';
+import "semantic-ui-less/semantic.less";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 export default class App extends Component {
     constructor() {
@@ -14,14 +17,18 @@ export default class App extends Component {
                         <div className="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
                             <div className="container">
 
-
+                                <Router>
                                 <div className="collapse navbar-collapse" id="navbarResponsive">
                                     <ul className="nav nav-pills navbar-nav mr-auto">
                                         <li className="nav-item">
-                                            <a className="nav-link"><i className="fa fa-home fa-fw"></i>Home<span className="sr-only">(current)</span></a>
+                                            <a className="nav-link"><i className="fa fa-home fa-fw"></i><Link to="/">Home</Link><span className="sr-only">(current)</span></a>
                                         </li>
-
-                                    </ul>
+                                        <li className="nav-item">
+                                            <a className="nav-link"><i className="fa fa-customer fa-fw"></i><link to="/Customer">Customer</link><span className="sr-only">(current)</span></a>
+                                        </li>
+                                        </ul>
+                                        <Route exact path="/" component={Home} />
+                                        <Route path="/Customer" component={Customer} />
 
                                     <ul className="nav navbar-nav ml-auto">
 
@@ -29,7 +36,8 @@ export default class App extends Component {
 
                                     </ul>
 
-                                </div>
+                                    </div>
+                                    </Router>
                             </div>
                         </div>
                     </nav>
