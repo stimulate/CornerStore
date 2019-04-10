@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using JavaScriptEngineSwitcher.ChakraCore;
-using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
-using React.AspNet;
+﻿using React.AspNet;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +9,9 @@ using Boilerplate.Web.App.Models;
 using System;
 using System.Threading.Tasks;
 using System.Threading;
+using Microsoft.AspNetCore.Http;
+using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
+using JavaScriptEngineSwitcher.ChakraCore;
 
 namespace Boilerplate.Web.App
 {
@@ -28,23 +28,22 @@ namespace Boilerplate.Web.App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddNodeServices();
+            services.AddDbContext<Models.SDJR1Context>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));            
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddReact();
             services.AddJsEngineSwitcher(options => options.DefaultEngineName = ChakraCoreJsEngine.EngineName)
-             .AddChakraCore();
-            services.AddMvc();            
-            var connection = @"Server=MIU\MSSQLSERVER02;Database=SDJR1;Trusted_Connection=True;ConnectRetryCount=0";
-            services.AddDbContext<SDJR1Context>(options => options.UseSqlServer(connection));
+            .AddChakraCore();        
+            services.AddMvc();                       
         }
 
-        public interface INodeServices : IDisposable
-        {
-            Task<T> InvokeAsync<T>(string moduleName, params object[] args);
-            Task<T> InvokeAsync<T>(CancellationToken cancellationToken, string moduleName, params object[] args);
+        //public interface INodeServices : IDisposable
+        //{
+        //    Task<T> InvokeAsync<T>(string moduleName, params object[] args);
+        //    Task<T> InvokeAsync<T>(CancellationToken cancellationToken, string moduleName, params object[] args);
 
-            Task<T> InvokeExportAsync<T>(string moduleName, string exportedFunctionName, params object[] args);
-            Task<T> InvokeExportAsync<T>(CancellationToken cancellationToken, string moduleName, string exportedFunctionName, params object[] args);
-        }
+        //    Task<T> InvokeExportAsync<T>(string moduleName, string exportedFunctionName, params object[] args);
+        //    Task<T> InvokeExportAsync<T>(CancellationToken cancellationToken, string moduleName, string exportedFunctionName, params object[] args);
+        //}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -53,6 +52,7 @@ namespace Boilerplate.Web.App
             {
                 //app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
+
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
                     HotModuleReplacement = true,
@@ -68,6 +68,7 @@ namespace Boilerplate.Web.App
             app.UseReact(config =>
             {
                 config
+                    .AddScript("~/js/remarkable.min.js")                    
                     .SetLoadBabel(false)
                     .AddScriptWithoutTransform("~/wwwroot/dist/app.bundle.js");
             });

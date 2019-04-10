@@ -15,40 +15,13 @@ module.exports = {
         chunkFilename: '[name].bundle.js',
         publicPath: 'wwwroot/'
     },
-    resolve: {
-        alias: {
-            '../../theme.config$': path.join(__dirname, 'my-semantic-theme/theme.config')
-        },
+    resolve: {        
         extensions: ['.js', '.jsx'],
     },
+    node: { fs: 'empty' },
     module: {
-        rules: [
-        {
-            use: ExtractTextPlugin.extract({
-                use: ['css-loader', 'less-loader']
-            }),
-            test: /\.less$/
-        },
-        // this rule handles images
-        {
-            test: /\.jpe?g$|\.gif$|\.ico$|\.png$|\.svg$/,
-            use: 'file-loader?name=[name].[ext]?[hash]'
-        },
+        rules: [      
 
-        // the following 3 rules handle font extraction
-        {
-            test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-            loader: 'url-loader?limit=10000&mimetype=application/font-woff'
-        },
-
-        {
-            test: /\.(ttf|eot)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-            loader: 'file-loader'
-        },
-        {
-            test: /\.otf(\?.*)?$/,
-            use: 'file-loader?name=/fonts/[name].  [ext]&mimetype=application/font-otf'
-        },
         {
             test: /\.(s?)css$/,
             loader: 'style-loader!css-loader!sass-loader'
@@ -56,12 +29,27 @@ module.exports = {
         {
             test: /\.(js|jsx)$/,
             exclude: /node_modules/,
-            use: { loader: "babel-loader" }
+            use: { loader: "babel-loader?presets[]=react,presets[]=env,presets[]=stage-0" }
         },
         {
             test: /\.html$/,
             use: { loader: "html-loader" }
-        }
+            },
+            {
+                test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+                loader: require.resolve('url-loader'),
+                options: {
+                    limit: 10000,
+                    name: 'static/media/[name].[hash:8].[ext]',
+                },
+            },
+            {
+                test: [/\.eot$/, /\.ttf$/, /\.svg$/, /\.woff$/, /\.woff2$/],
+                loader: require.resolve('file-loader'),
+                options: {
+                    name: 'static/media/[name].[hash:8].[ext]',
+                },
+            },
 
         ]
     },
@@ -74,7 +62,7 @@ module.exports = {
             jQuery: 'jquery',
             'window.jQuery': 'jquery',
             Popper: ['popper.js', 'default']
-        }),
+        }),        
         new ExtractTextPlugin(
             { filename: 'style.bundle.css', disable: false, allChunks: true }
         ),
@@ -82,7 +70,8 @@ module.exports = {
             inject: false,
             hash: true,
             template: "./Views/Home/index.cshtml",
-            filename: "index.html"
+            filename: "index.html",
+            favicon: './wwwroot/favicon.ico'
         })
     ]
 };

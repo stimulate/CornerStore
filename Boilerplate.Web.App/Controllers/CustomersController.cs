@@ -18,18 +18,31 @@ namespace Boilerplate.Web.App.Controllers
             _context = context;
         }
 
-        // GET: Customers
-        [HttpGet]
-        [Route("/Customer/Index")]
+        // GET: Customers  
+        
         public async Task<IActionResult> Index()
         {
-            ViewBag.customer = _context.Customer.ToList();
-            return View(await _context.Customer.ToListAsync());
+            //return View(await _context.Customer.ToListAsync());
+            return View();
         }
 
+        [Route("customer")]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<IActionResult> Overview()
+        {
+            var _comments = await _context.Customer.ToListAsync();
+            return Json(_comments);
+        }
+
+        [Route("customer/new")]
+        [HttpPost]
+        public async Task<ActionResult> Add(Customer comment)
+        {                        
+            _context.Add(comment);
+            await _context.SaveChangesAsync();
+            return RedirectToRoute("customer");
+        }
         // GET: Customers/Details/5
-        [HttpGet]
-        [Route("/Customer/Details/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -48,8 +61,6 @@ namespace Boilerplate.Web.App.Controllers
         }
 
         // GET: Customers/Create
-        [HttpGet]
-        [Route("/Customer/Create")]
         public IActionResult Create()
         {
             return View();
@@ -60,7 +71,6 @@ namespace Boilerplate.Web.App.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("/Customer/Create")]
         public async Task<IActionResult> Create([Bind("Id,Name,Address,Phone")] Customer customer)
         {
             if (ModelState.IsValid)
@@ -73,8 +83,6 @@ namespace Boilerplate.Web.App.Controllers
         }
 
         // GET: Customers/Edit/5
-        [HttpPut]
-        [Route("/Customer/Edit/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -95,7 +103,6 @@ namespace Boilerplate.Web.App.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("/Customer/Edit/{id}")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Address,Phone")] Customer customer)
         {
             if (id != customer.Id)
@@ -127,8 +134,6 @@ namespace Boilerplate.Web.App.Controllers
         }
 
         // GET: Customers/Delete/5
-        [HttpGet]
-        [Route("/Customer/Delete/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -147,9 +152,7 @@ namespace Boilerplate.Web.App.Controllers
         }
 
         // POST: Customers/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        [HttpDelete]
-        [Route("/Customer/Delete/{id}")]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

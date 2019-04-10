@@ -5,14 +5,26 @@
     padding-top: 0em;
 }
 
+nav{
+    width:100%;
+}
+
+#logo {
+    width: 50px;    
+    margin-right: 8px;
+}
+
+.container{
+    padding: 0px;
+    margin : 0px;
+}
 
 pre {
     background: #f7f7f9
 }
 
 body {
-    background-color: whitesmoke;
-    padding-top: 100px
+    background-color: whitesmoke;    
 }
 
 @media (min-width: 768px) {
@@ -64,37 +76,8 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-.nav-scroller {
-    position: relative;
-    z-index: 2;
-    height: 2.75rem;
-    overflow-y: hidden;
-}
 
-    .nav-scroller .nav {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-wrap: nowrap;
-        flex-wrap: nowrap;
-        padding-bottom: 1rem;
-        margin-top: -1px;
-        overflow-x: auto;
-        text-align: center;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-    }
 
-    .nav-scroller .nav-link {
-        padding-top: .75rem;
-        padding-bottom: .75rem;
-        font-size: .875rem;
-    }
-
-.card-img-right {
-    height: 100%;
-    border-radius: 0 3px 3px 0;
-}
 
 .flex-auto {
     -ms-flex: 0 0 auto;
@@ -173,7 +156,7 @@ h1, h2, h3, h4, h5, h6 {
 /*
  * Footer
  */
-.blog-footer {
+footer {
     padding: 2.5rem 0;
     color: #999;
     text-align: center;
@@ -181,6 +164,6 @@ h1, h2, h3, h4, h5, h6 {
     border-top: .05rem solid #e5e5e5;
 }
 
-    .blog-footer p:last-child {
+    footer p:last-child {
         margin-bottom: 0;
     }

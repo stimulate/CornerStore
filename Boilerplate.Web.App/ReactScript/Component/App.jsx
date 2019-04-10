@@ -1,85 +1,67 @@
-﻿// ./src/common/main.component.jsx
-import React, { Component } from 'react';
-import Customer from './Customer';
-import "semantic-ui-less/semantic.less";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+// ./src/common/main.component.jsx
+import React, { Component } from 'react'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import Home from './Home'
+import { Customer } from './Customer'
+import imgsrc from '../../wwwroot/favicon.png'
+import { CommentForm } from './CommentForm';
 
 export default class App extends Component {
-    constructor() {
-        super();
-    }
+  constructor() {
+    super()
+  }
 
-    render() {
-        return (<div className="container-fluid">
-            <div className='row'>
-                <div className='col-sm-12'>
-                    <div className="main-nav"><nav>
-                        <div className="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
-                            <div className="container">
-
-                                <Router>
-                                <div className="collapse navbar-collapse" id="navbarResponsive">
-                                    <ul className="nav nav-pills navbar-nav mr-auto">
-                                        <li className="nav-item">
-                                            <a className="nav-link"><i className="fa fa-home fa-fw"></i><Link to="/">Home</Link><span className="sr-only">(current)</span></a>
-                                        </li>
-                                        <li className="nav-item">
-                                            <a className="nav-link"><i className="fa fa-customer fa-fw"></i><link to="/Customer">Customer</link><span className="sr-only">(current)</span></a>
-                                        </li>
-                                        </ul>
-                                        <Route exact path="/" component={Home} />
-                                        <Route path="/Customer" component={Customer} />
-
-                                    <ul className="nav navbar-nav ml-auto">
-
-                                        <span><li className="nav-link">Hi User <button >Logout</button></li> </span>
-
-                                    </ul>
-
-                                    </div>
-                                    </Router>
-                            </div>
-                        </div>
-                    </nav>
-
+  render() {
+    return (
+        <div className="ui container">  
+            <Router>
+                
+                <div className="ui inverted segment wide" >
+                    <div className="ui inverted secondary pointing menu">
+                        <a className="item">
+                            <img src={imgsrc} id="logo" className="ui icon left floated" />
+                            </a>
+                    <a className="active item">
+                        <Link to="/">Home</Link>
+                    </a>
+                    <a className="item">
+                        <Link to='/staff/index'>Staff</Link>
+                    </a>
+                    <a className="item">
+                        <Link to="/cus">Role</Link> 
+                    </a>
+                        
+                        <div className="right menu">
+                            
+                    <div className="item">
+                        <span className="ui text">Hi User</span>
                     </div>
-                </div>
-            </div>
-            <div className='container-fluid' id="body-cover">
-                <div className="row">
-                    <div className="col-md-1 hidden-xs">
+                    <div className="item">
+                        <div className="ui primary button">Sign Up</div>
                     </div>
-                    <div className="col-md-3 col-xs-4">
-                        <div className="col">
-                            <div className="card border-primary mb-4">
-                                <img className="card-img-top" alt="Card image cap" src="https://semantic-ui.com/images/avatar/large/joe.jpg" />
-                                <div className="card-body">
-                                    <h4 className="card-title"><a>Mirani</a></h4>
-                                    <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <a href="#" className="btn btn-primary">Button</a>
-                                </div>
-                            </div>
                         </div>
                     </div>
-                    <div className="col-md-7 col-xs-8">
-                        <div className="jumbotron col">
-                            <h1>This is body </h1>
-                         </div>
-                        <div className="jumbotron col">
-                            This is body
-                         </div>
-                        <div className="jumbotron col">
-                            This is body
-                         </div>
+            </div>
+                    <div>
+                       
+                    <Route exact path="/" component={Home} />
+                    <Route path='/customer/create' component={CommentForm} />
                     </div>
-                    <div className="col-md-1 hidden-xs">
+                    </Router>
+       
+        <span></span>
+            
+            <div>
+          <Customer url="comments" />
+            </div>
 
-                    </div>
-                </div>
-            </div>
-            <div className="row">
-                <div className="column"><footer id="footer" >This is Footer</footer></div>
-            </div>
-        </div>);
-    }
+            <footer className="ui footer purple"> <span>&emsp;&emsp;<i className="copyright outline icon"></i> 2019 - Sleek Store Inc. by Sabrina Yu. All rights reserved.&emsp;&emsp;</span><i className="phone icon"></i><i className="envelope outline icon"></i><i className="slack hash icon"></i><i className="rss icon"></i>
+                <br/>
+                <i className="map pin icon"></i><span> 111 New North Rd, Mt Albert, Auckland, 1024</span>&emsp;&emsp;<i className="github icon"></i><i className="facebook icon"></i><i className="twitter icon"></i>
+            </footer>
+
+
+        </div>
+    )
+  }
 }
