@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react'
-import {Redirect} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 
 export class CommentForm extends Component {
     constructor(props) {
@@ -38,13 +38,12 @@ export class CommentForm extends Component {
         }
         this.props.submit({ address: address, phone: phone, name: name, });
         this.setState({ address: '', phone: '', name: '', });
-        this.props.flag = false;
-        return <Redirect to={{ pathname: "/customer" }} />;
+        this.props.back();
     };
 
     render() {
         return (
-            <form className="ui form" onSubmit={this.handleSubmit}>
+          <form className="ui form" onSubmit={this.handleSubmit}>
                 <input
                     type="text"
                     placeholder="Your name"
@@ -63,7 +62,7 @@ export class CommentForm extends Component {
                     value={this.state.phone}
                     onChange={this.handlePhoneChange}
                 />
-                <input className="ui button primary" type="submit" value="Post"/>
+          <input className="ui button primary" type="submit" value="Post"/>
             </form>
         );
     }

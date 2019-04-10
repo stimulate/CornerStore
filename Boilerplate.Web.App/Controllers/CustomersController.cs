@@ -30,18 +30,29 @@ namespace Boilerplate.Web.App.Controllers
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Overview()
         {
-            var _comments = await _context.Customer.ToListAsync();
-            return Json(_comments);
+            var _cus = await _context.Customer.ToListAsync();
+            return Json(_cus);
         }
 
         [Route("customer/new")]
         [HttpPost]
-        public async Task<ActionResult> Add(Customer comment)
+        public async Task<ActionResult> Add(Customer cus)
         {                        
-            _context.Add(comment);
+            _context.Add(cus);
             await _context.SaveChangesAsync();
             return RedirectToRoute("customer");
         }
+
+        [Route("customer/delete")]
+        [HttpPost]
+        public async Task<ActionResult> Remove(int id)
+        {
+            var cus = await _context.Customer.FindAsync(id);
+            _context.Remove(cus);
+            await _context.SaveChangesAsync();
+            return RedirectToRoute("customer");
+        }
+
         // GET: Customers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -152,7 +163,8 @@ namespace Boilerplate.Web.App.Controllers
         }
 
         // POST: Customers/Delete/5
-        [HttpPost, ActionName("Delete")]
+        
+        [HttpPost]        
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

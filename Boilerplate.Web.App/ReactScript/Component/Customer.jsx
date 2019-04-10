@@ -12,8 +12,9 @@ export class Customer extends Component {
         this.state = {
             data: [],
             showform: false
-        }    
-      
+        }
+        this.loadFromServer = this.loadFromServer.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }      
    async loadFromServer(){     
         
@@ -32,7 +33,7 @@ export class Customer extends Component {
        this.setState({data: res.data})        
     };
 
-    handleSubmit= (customer)=> {
+    handleSubmit(customer){
         var customers = this.state.data;
         
         var newCustomer = customers.concat([customer]);
@@ -42,7 +43,9 @@ export class Customer extends Component {
         data.append('name', customer.name);
         data.append('phone', customer.phone);
         data.append('address', customer.address);
-
+        
+        //const res = await xmr.post('/customer/new', data);
+        //console.log(res)
         var xhr = new XMLHttpRequest();
         xhr.open('post', "customer/new", true);
         xhr.onload = function () {
@@ -62,9 +65,15 @@ export class Customer extends Component {
     show = () => {
         this.setState({ showform: true });
     }
+
+    goback = () => {
+        this.setState({ showform: false });
+        this.loadFromServer();
+    }
+    
     render() {
         if (this.state.showform) {
-            return (<CommentForm submit={this.handleSubmit} flag = {this.state.showform} />);
+            return (<CommentForm submit={this.handleSubmit} back={this.goback} />);
         }
         console.log(this.state.data)
         return (
@@ -72,8 +81,8 @@ export class Customer extends Component {
                 <h1>Customers</h1>
                 
                 <Link to="/customer/create"> <button onClick={this.show} className="ui item button purple">Create</button> </Link>
-               
-                 <CommentList data={this.state.data} />  
+
+                <CommentList data={this.state.data} load={this.loadFromServer} />  
                 <br/>
                 <Pagination className="fluid" color='blue'
                     defaultActivePage={1}
