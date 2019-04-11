@@ -2,9 +2,9 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import Home from './Home'
-import { Customer } from './Customer'
+import { Customer } from './Customer/Customer'
 import imgsrc from '../../wwwroot/favicon.png'
-import { CommentForm } from './CommentForm';
+import { CommentForm } from './Customer/CommentForm'
 
 export default class App extends Component {
   constructor() {

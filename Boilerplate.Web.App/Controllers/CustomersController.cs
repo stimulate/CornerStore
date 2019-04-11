@@ -43,14 +43,48 @@ namespace Boilerplate.Web.App.Controllers
             return RedirectToRoute("customer");
         }
 
-        [Route("customer/delete")]
-        [HttpPost]
+        [Route("customer/delete/{id}")]
+        [HttpDelete]
         public async Task<ActionResult> Remove(int id)
         {
             var cus = await _context.Customer.FindAsync(id);
             _context.Remove(cus);
             await _context.SaveChangesAsync();
             return RedirectToRoute("customer");
+        }
+
+        
+        [HttpPost]
+        [Route("customer/adjust/{id}")]        
+        public async Task<IActionResult> adjust(Customer cus)
+        {
+            var customerFind = await _context.Customer
+                .FirstOrDefaultAsync(m => m.Id == cus.Id);
+
+            customerFind.Address = cus.Address;
+            customerFind.Phone = cus.Phone;
+            customerFind.Name = cus.Name;
+            _context.Entry(customerFind).State = EntityState.Modified;
+            //_context.Update(customer);
+            await _context.SaveChangesAsync();
+
+            //try
+            //{
+            //    _context.Update(customer);
+            //    await _context.SaveChangesAsync();
+            //}
+            //catch (DbUpdateConcurrencyException)
+            //{
+            //    if (!CustomerExists(customer.Id))
+            //    {
+            //        return NotFound();
+            //    }
+            //    else
+            //    {
+            //        throw;
+            //    }
+            //}
+            return RedirectToRoute("customer");           
         }
 
         // GET: Customers/Details/5
@@ -92,7 +126,7 @@ namespace Boilerplate.Web.App.Controllers
             }
             return View(customer);
         }
-
+        [Route("customer/edit/{id}")]
         // GET: Customers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
