@@ -19,29 +19,13 @@ export class Product extends Component {
             formProps3: '',
             editId:'',
         }
-        this.handleEditSubmit = this.handleEditSubmit.bind(this);
-        this.loadFromServer = this.loadFromServer.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleEditSubmit = this.handleEditSubmit.bind(this)
+        this.loadFromServer = this.loadFromServer.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
     }      
-   async loadFromServer(){     
-        
-        //var url = this.props.url;     
-        //axios.get('/products')
-        //    .then((response) =>{
-                
-        //        this.setState({ data: response.data })
-        //        console.log(this.state.data)
-        //    })
-        //    .catch(function (error) {
-        //        console.log(error);
-        //    });
-       const res = await xmr.get('/product')
-      // console.log(res)
-       this.setState({data: res.data})        
-    };
+   
+    handleSubmit(product) {
 
-    handleSubmit(product){
-       
         var data = new FormData();
         
         data.append('name', product.name);
@@ -51,35 +35,35 @@ export class Product extends Component {
         //const res = await xmr.post('/product/new', data);
         //console.log(res)
         if (!this.state.editform) {
-            var products = this.state.data; //old data
-            var newproduct = products.concat([product]); //old data + new obj
+            var products = this.state.data //old data
+            var newproduct = products.concat([product]) //old data + new obj
             this.setState.data = newproduct 
-            this.setState({ data: newproduct }); //update old data
-            xhr.open('post', "product/new", true);
+            this.setState({ data: newproduct }) //update old data
+            xhr.open('post', "product/new", true)
             xhr.onload = function () {
-                this.loadFromServer;
+                this.loadFromServer
             };
-            xhr.send(data);
+            xhr.send(data)
         }
         else {      
-            var d = parseInt(this.state.editId);
+            var d = parseInt(this.state.editId)
             data.append('id', d)
-            xhr.open('post', "product/adjust/" + d, true);
+            xhr.open('post', "product/adjust/" + d, true)
             xhr.onload = function () {
-                this.loadFromServer;
+                this.loadFromServer
             };
-            xhr.send(data);
-        }        
-    };
+            xhr.send(data)
+        }
+    }
 
      handleEditSubmit(product) {
-        var d = parseInt(this.state.editId);
-        var ndata = new FormData();
-        ndata.append('id',d)
-        ndata.append('name', product.name);
-        ndata.append('phone', product.phone);
-        ndata.append('address', product.address);
-         
+        var d = parseInt(this.state.editId)
+        var ndata = new FormData()
+        ndata.append('id', d)
+        ndata.append('name', product.name)
+        ndata.append('phone', product.phone)
+        ndata.append('address', product.address)
+
         //var xhr = new XMLHttpRequest();
         //xhr.open('put', "product/edit", true);
         //xhr.onload = function () {
@@ -136,12 +120,28 @@ export class Product extends Component {
         });
         
     }
+
+    async loadFromServer() {
+
+        //var url = this.props.url;     
+        //axios.get('/products')
+        //    .then((response) =>{
+
+        //        this.setState({ data: response.data })
+        //        console.log(this.state.data)
+        //    })
+        //    .catch(function (error) {
+        //        console.log(error);
+        //    });
+        const res = await xmr.get('/product')
+        // console.log(res)
+        this.setState({ data: res.data })
+    };
        
     render() {
         if (this.state.showform) {
             return (<ProductForm submit={this.handleSubmit} back={this.goback} cus={this} />);
         }
-      
         return (
             <div className="product">
                 <h1>products</h1>
@@ -149,8 +149,11 @@ export class Product extends Component {
                 <Link to="/product/create"> <button onClick={this.show} className="ui item button purple">Create</button> </Link>
 
                 <ProductList data={this.state.data} del={this.del} edit={this.edit} />  
-                <br/>
-                <Pagination className="fluid" color='blue'
+                <br />
+
+                <Pagination
+                    className="fluid"
+                    color="blue"
                     defaultActivePage={1}
                     ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
                     firstItem={{ content: <Icon name='angle double left' />, icon: true }}
@@ -159,10 +162,7 @@ export class Product extends Component {
                     nextItem={{ content: <Icon name='angle right' />, icon: true }}
                     totalPages={10}
                 />
-            </div>
-            
-        );
+            </div>            
+        )
     }
 }
-
-
