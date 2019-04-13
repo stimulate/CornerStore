@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Table, Button } from 'semantic-ui-react'
-import xmr from '../../service'
+import { Confirm } from 'semantic-ui-react'
 
 
 export class CommentList extends Component {
@@ -38,8 +38,8 @@ export class CommentList extends Component {
             <Table.Cell >{d.phone}</Table.Cell>
               <Table.Cell>
                       <Button floated='right' primary onClick={(e) => this.props.cus.edit(d, e)} >Edit</Button>
-                      <Button floated='right' color='pink' onClick={(e) => this.props.cus.del(d.id, e)}>Delete</Button>
-                      
+                      <Button floated='right' color='pink' onClick={this.props.cus.delConfirm}>Delete</Button>
+                      <Confirm content={'Are you sure to delete?'} open={this.props.cus.state.delCheck} onCancel={this.props.cus.goback} onConfirm={(e) => this.props.cus.del(d.id, e)} />
             </Table.Cell>
           </Table.Row>     
       )
@@ -69,7 +69,8 @@ export class CommentList extends Component {
                 <Table.Body>
                     {cusNodes}
                 </Table.Body>
-        </Table>
+                </Table>
+                
                 </div>
                 
     )

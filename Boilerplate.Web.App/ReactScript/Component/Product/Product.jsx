@@ -1,126 +1,30 @@
 ﻿import React, { Component } from 'react'
 import { ProductList } from './ProductList'
 import { ProductForm } from './ProductForm'
-import { Icon, Pagination } from 'semantic-ui-react'
-import { BrowserRouter as  Link } from 'react-router-dom'
-import xmr from '../service'
+import { Confirm, Pagination, Icon } from 'semantic-ui-react'
+import xmr from '../../service'
 
 
 export class Product extends Component {
     constructor(props) {
         super(props)
-        //this.state = { data: this.props.initialData };
         this.state = {
             data: [],
             showform: false,
             editform: false,
             formProps1: '',
-            formProps2: '',
-            formProps3: '',
-            editId:'',
+            formProps2: '',            
+            editId: '',
+            searchString: '',
+            totalPage: 1,
+            delCheck: false,
+            store: []
         }
-        this.handleEditSubmit = this.handleEditSubmit.bind(this)
-        this.loadFromServer = this.loadFromServer.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
-    }      
-   
-    handleSubmit(product) {
 
-        var data = new FormData();
-        
-        data.append('name', product.name);
-        data.append('phone', product.phone);
-        data.append('address', product.address);
-        var xhr = new XMLHttpRequest();
-        //const res = await xmr.post('/product/new', data);
-        //console.log(res)
-        if (!this.state.editform) {
-            var products = this.state.data //old data
-            var newproduct = products.concat([product]) //old data + new obj
-            this.setState.data = newproduct 
-            this.setState({ data: newproduct }) //update old data
-            xhr.open('post', "product/new", true)
-            xhr.onload = function () {
-                this.loadFromServer
-            };
-            xhr.send(data)
-        }
-        else {      
-            var d = parseInt(this.state.editId)
-            data.append('id', d)
-            xhr.open('post', "product/adjust/" + d, true)
-            xhr.onload = function () {
-                this.loadFromServer
-            };
-            xhr.send(data)
-        }
+        this.loadFromServer = this.loadFromServer.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
-
-     handleEditSubmit(product) {
-        var d = parseInt(this.state.editId)
-        var ndata = new FormData()
-        ndata.append('id', d)
-        ndata.append('name', product.name)
-        ndata.append('phone', product.phone)
-        ndata.append('address', product.address)
-
-        //var xhr = new XMLHttpRequest();
-        //xhr.open('put', "product/edit", true);
-        //xhr.onload = function () {
-        //    this.loadFromServer;
-        //};
-        //var data = {d,ndata}
-        // xhr.send(ndata);  
-    }
-
-    componentDidMount() {
-        //const timer = window.setInterval(this.loadFromServer, 2000);
-        this.loadFromServer();        
-    }
-    //componentWillUnmount() {
-    //   //window.clearInterval(timer);        
-    //}
-    show = () => {
-        this.setState({ showform: true });
-    }
-
-    goback = () => {
-        this.setState({ showform: false });
-        this.setState({
-            formProps1: '',
-            formProps2: '',
-            formProps3: '',
-        });
-        this.loadFromServer()
-    }
-
-    del = (d) => {
-        //event.preventDefault();
-        var xhr = new XMLHttpRequest();
-        var data = parseInt(d);
-        xhr.open('delete', "product/delete/" + d, true);
-        xhr.onload = () => {
-            this.setState({
-                data: this.state.data.filter(cus => cus.id != d)
-            });
-            this.loadFromServer;
-        };        
-        xhr.send(data);
-    } 
-
-    edit = (cus) => {
-             
-        this.setState({
-            showform: true,
-            formProps1: cus.address,
-            formProps2: cus.phone,
-            formProps3: cus.name,
-            editform: true,
-            editId: cus.id,
-        });
-        
-    }
-
+    //update & read data
     async loadFromServer() {
 
         //var url = this.props.url;     
@@ -134,35 +38,146 @@ export class Product extends Component {
         //        console.log(error);
         //    });
         const res = await xmr.get('/product')
-        // console.log(res)
-        this.setState({ data: res.data })
+        await this.setState({
+            data: res.data,
+            store: res.data
+        }, () => {
+            this.setState({
+                totalPage: Math.ceil(this.state.data.length / 5) || 1
+            }, () => { this.page(); })
+        });
+
     };
-       
+
+    handleSubmit(product) {
+
+        var data = new FormData();
+        data.append('Name', product.name);
+        data.append('Phone', product.price);
+      
+        var xhr = new XMLHttpRequest();
+
+        if (!this.state.editform) {
+            var products = this.state.data; //old data
+            var newProduct = products.concat([product]); //old data + new obj
+            this.setState.data = newProduct
+            this.setState({ data: newProduct }); //update old data
+            xhr.open('post', "/product/new", true);
+            xhr.onload = function () {
+                //console.log(data);
+                this.loadFromServer;
+            };
+            xhr.send(data);
+
+        }
+        else {
+            var d = parseInt(this.state.editId);
+            data.append('id', d)
+            xhr.open('post', "/product/adjust/" + d, true);
+            xhr.onload = function () {
+                this.setState({
+                    data: this.state.data.filter(cus => cus.id != d).concat([data]),
+                })
+                this.loadFromServer;
+            }
+            xhr.send(data);
+        }
+    };
+
+    componentDidMount() {
+        this.loadFromServer();
+        console.log(this.state.totalPage)
+    }
+
+    show = () => {
+        this.setState({ showform: true });
+    }
+
+    goback = () => {
+        this.setState({ showform: false });
+        this.setState({
+            formProps1: '',
+            formProps2: '',
+            delCheck: false
+        })
+        this.loadFromServer()
+    }
+
+    delConfirm = () => {
+        this.setState({
+            delCheck: true,
+        })
+    }
+
+    del = (d) => {
+        var xhr = new XMLHttpRequest()
+        var data = parseInt(d);
+        xhr.open('delete', "/product/delete/" + d, true);
+        xhr.onload = () => {
+            this.setState({
+                data: this.state.data.filter(cus => cus.id != d)
+            })
+            this.loadFromServer
+        };
+        xhr.send(data)
+    }
+
+    edit = (cus) => {
+
+        this.setState({
+            showform: true,            
+            formProps2: cus.price,
+            formProps1: cus.name,
+            editform: true,
+            editId: cus.id,
+        })
+    }
+
+    page = () => {
+        setTimeout(() => {
+            var cur = this.refs.pn.state.activePage;
+            var arr = this.state.store;
+            if (arr.length > 5) {
+                var arr_filter = (cur == 1) ? arr.filter(c => arr.indexOf(c) < 5) : arr.filter(c => arr.indexOf(c) > (cur - 1) * 5 - 1 && arr.indexOf(c) < cur * 5)
+                this.setState({
+                    data: arr_filter,
+                })
+            }
+            console.log(cur)
+        }, 0)
+    }
+
     render() {
+
         if (this.state.showform) {
             return (<ProductForm submit={this.handleSubmit} back={this.goback} cus={this} />);
         }
+
         return (
             <div className="product">
-                <h1>products</h1>
-                
-                <Link to="/product/create"> <button onClick={this.show} className="ui item button purple">Create</button> </Link>
+                <h1>Products</h1>
 
-                <ProductList data={this.state.data} del={this.del} edit={this.edit} />  
+                <button onClick={this.show} className="ui item button purple">Create</button>
+
+                <ProductList cus={this} />
                 <br />
-
                 <Pagination
                     className="fluid"
                     color="blue"
+                    ref="pn"
+                    onClick={(e) => this.page(e)}
                     defaultActivePage={1}
                     ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
                     firstItem={{ content: <Icon name='angle double left' />, icon: true }}
                     lastItem={{ content: <Icon name='angle double right' />, icon: true }}
                     prevItem={{ content: <Icon name='angle left' />, icon: true }}
                     nextItem={{ content: <Icon name='angle right' />, icon: true }}
-                    totalPages={10}
+                    totalPages={this.state.totalPage}
                 />
-            </div>            
+            </div>
+
         )
     }
 }
+
+

@@ -127,6 +127,10 @@ namespace Boilerplate.Web.App.Models
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<TransactionHead>(entity =>

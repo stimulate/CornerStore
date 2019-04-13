@@ -26,6 +26,7 @@ namespace Boilerplate.Web.App.Controllers
             return View();
         }
 
+        [HttpGet]
         [Route("customer")]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Overview()
@@ -36,6 +37,7 @@ namespace Boilerplate.Web.App.Controllers
 
         [Route("customer/new")]
         [HttpPost]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<ActionResult> Add(Customer cus)
         {                        
             _context.Add(cus);
@@ -45,6 +47,7 @@ namespace Boilerplate.Web.App.Controllers
 
         [Route("customer/delete/{id}")]
         [HttpDelete]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<ActionResult> Remove(int id)
         {
             var cus = await _context.Customer.FindAsync(id);
@@ -55,7 +58,8 @@ namespace Boilerplate.Web.App.Controllers
 
         
         [HttpPost]
-        [Route("customer/adjust/{id}")]        
+        [Route("customer/adjust/{id}")]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> adjust(Customer cus)
         {
             var customerFind = await _context.Customer
@@ -126,7 +130,7 @@ namespace Boilerplate.Web.App.Controllers
             }
             return View(customer);
         }
-        [Route("customer/edit/{id}")]
+        
         // GET: Customers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {

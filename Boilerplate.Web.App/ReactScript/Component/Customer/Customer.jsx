@@ -2,7 +2,6 @@
 import { CommentList } from './CommentList'
 import { CommentForm } from './CommentForm'
 import { Pagination, Icon } from 'semantic-ui-react'
-import { BrowserRouter as  Link } from 'react-router-dom'
 import xmr from '../../service'
 
 
@@ -17,6 +16,7 @@ export class Customer extends Component {
             formProps2: '',
             formProps3: '',
             editId: '',
+            delCheck: false,
             searchString: '',            
             totalPage:1,
             store:[]
@@ -39,23 +39,23 @@ export class Customer extends Component {
         //        console.log(error);
         //    });
        const res = await xmr.get('/customer')
-       this.setState({
+       await this.setState({
            data: res.data,
-           store: res.data           
-       })        
-       this.setState({
-           totalPage: Math.ceil(this.state.data.length / 5) || 1           
-       })
-       this.page(this.refs.pn.state.activePage);
+           store: res.data
+       }, () => {
+           this.setState({
+               totalPage: Math.ceil(this.state.data.length / 5) || 1
+           }, () => { this.page();})
+           });    
+       
     };
 
     handleSubmit(customer){
        
-        var data = new FormData();
-        
-        data.append('name', customer.name);
-        data.append('phone', customer.phone);
-        data.append('address', customer.address);
+        var data = new FormData();        
+        data.append('Name', customer.name);
+        data.append('Phone', customer.phone);
+        data.append('Address', customer.address);
         var xhr = new XMLHttpRequest();
      
         if (!this.state.editform) {
@@ -63,11 +63,13 @@ export class Customer extends Component {
             var newCustomer = customers.concat([customer]); //old data + new obj
             this.setState.data = newCustomer 
             this.setState({ data: newCustomer }); //update old data
-            xhr.open('post', "customer/new", true);
+            xhr.open('post', "/customer/new", true);
             xhr.onload = function () {
+                //console.log(data);
                 this.loadFromServer;
             };
             xhr.send(data);
+           
         }
         else {      
             var d = parseInt(this.state.editId);
@@ -93,7 +95,10 @@ export class Customer extends Component {
     }
 
     goback = () => {
-        this.setState({ showform: false });
+        this.setState({
+            showform: false,
+            delCheck: false
+        });
         this.setState({
             formProps1: '',
             formProps2: '',
@@ -102,17 +107,26 @@ export class Customer extends Component {
         this.loadFromServer()
     }
 
+
+    delConfirm = () => {
+        this.setState({
+            delCheck:true,
+        })
+    }
+
     del = (d) => {       
         var xhr = new XMLHttpRequest()
         var data = parseInt(d);
-        xhr.open('delete', "customer/delete/" + d, true);
+        xhr.open('delete', "/customer/delete/" + d, true);
         xhr.onload = () => {
             this.setState({
-                data: this.state.data.filter(cus => cus.id != d)
+                data: this.state.data.filter(cus => cus.id != d),
+                delCheck: false
             })
             this.loadFromServer
         };        
         xhr.send(data)
+        console.log(data)
     } 
 
     edit = (cus) => {
@@ -129,8 +143,8 @@ export class Customer extends Component {
 
     page = () => {        
         setTimeout(() => {
-            const cur = this.refs.pn.state.activePage;
-            const arr = this.state.store;
+            var cur = this.refs.pn.state.activePage;
+            var arr = this.state.store;
             if (arr.length > 5) {
                 var arr_filter = (cur == 1) ? arr.filter(c => arr.indexOf(c) < 5) : arr.filter(c => arr.indexOf(c) > (cur - 1) * 5 - 1 && arr.indexOf(c) < cur * 5)
                 this.setState({
@@ -152,7 +166,7 @@ export class Customer extends Component {
             <div className="customer"> 
                 <h1>Customers</h1>
                 
-                <Link to="/customer/create"> <button onClick={this.show} className="ui item button purple">Create</button> </Link>
+                <button onClick={this.show} className="ui item button purple">Create</button>
 
                 <CommentList cus={this} />  
                 <br />

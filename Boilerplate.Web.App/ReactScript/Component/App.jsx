@@ -4,7 +4,9 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import Home from './Home'
 import { Customer } from './Customer/Customer'
 import imgsrc from '../../wwwroot/favicon.png'
-import { CommentForm } from './Customer/CommentForm'
+import { Store } from './Store/Store'
+import { Product } from './Product/Product'
+import {Sales} from './Sales/Sales'
 
 
 export default class App extends Component {
@@ -26,10 +28,16 @@ export default class App extends Component {
                         <Link to="/">Home</Link>
                     </a>
                     <a className="item">
-                        <Link to='/staff/index'>Staff</Link>
+                            <Link to='/product/index'>Product</Link>
                     </a>
                     <a className="item">
-                        <Link to="/cus">Role</Link> 
+                            <Link to='/store/index'>Store</Link>
+                    </a>
+                    <a className="item">
+                    <Link to='/sales/index'>Sales</Link>
+                    </a>
+                    <a className="item">
+                        <Link to='/customer/index'>Customer</Link>
                     </a>
                         
                         <div className="right menu">
@@ -45,14 +53,17 @@ export default class App extends Component {
             </div>
                     <div>                    
                     <Route exact path="/" component={Home} />
-                    <Route path='/customer/create' component={CommentForm} />
+                    <Route path='/product/index' component={Customer} />
+                    <Route path='/store/index' component={Store} />
+                    <Route path='/sales/index' component={Sales} />
+                    <Route path='/customer/index' component={Customer} />
                     </div>
                     </Router>
        
         <span></span>
             
             <div>
-          <Customer url="comments" />
+       
             </div>
 
             <footer className="ui footer purple"> <span>&emsp;&emsp;<i className="copyright outline icon"></i>

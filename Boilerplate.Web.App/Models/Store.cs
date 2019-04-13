@@ -16,6 +16,8 @@ namespace Boilerplate.Web.App.Models
         [Required]
         [StringLength(20)]
         public string Name { get; set; }
+        [Required]
+        public string Address { get; set; }
 
         public ICollection<StaffAssignment> StaffAssignment { get; set; }
         public ICollection<TransactionHead> TransactionHead { get; set; }
