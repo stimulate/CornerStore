@@ -14,7 +14,7 @@ export class ProductForm extends Component {
     }
 
     handlePriceChange(e) {
-        this.setState({ phone: e.target.value });
+        this.setState({ price: e.target.value });
     };
 
     handleNameChange(e) {
@@ -23,7 +23,7 @@ export class ProductForm extends Component {
 
     handleSubmit(e) {
         e.preventDefault();        
-        var price = this.state.price.trim();
+        var price = parseInt(this.state.price);
         var name = this.state.name.trim();
 
         if ( !name || !price) {

@@ -61,7 +61,7 @@ export class Customer extends Component {
         if (!this.state.editform) {
             var customers = this.state.data; //old data
             var newCustomer = customers.concat([customer]); //old data + new obj
-            this.setState.data = newCustomer 
+           // this.setState.data = newCustomer 
             this.setState({ data: newCustomer }); //update old data
             xhr.open('post', "/customer/new", true);
             xhr.onload = function () {

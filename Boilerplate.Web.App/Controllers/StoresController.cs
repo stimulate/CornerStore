@@ -18,12 +18,52 @@ namespace Boilerplate.Web.App.Controllers
             _context = context;
         }
 
-        // GET: Stores
+        // GET: Stores     
+        [HttpGet]
+        [Route("store")]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Store.ToListAsync());
+            return Json(await _context.Store.ToListAsync());
         }
 
+
+        [Route("store/new")]
+        [HttpPost]        
+        public async Task<ActionResult> Add(Store cus)
+        {
+            _context.Add(cus);
+            await _context.SaveChangesAsync();
+            return RedirectToRoute("store");
+        }
+
+        [Route("store/delete/{id}")]
+        [HttpDelete]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<ActionResult> Remove(int id)
+        {
+            var cus = await _context.Store.FindAsync(id);
+            _context.Remove(cus);
+            await _context.SaveChangesAsync();
+            return RedirectToRoute("store");
+        }
+
+        [HttpPost]
+        [Route("store/adjust/{id}")]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<IActionResult> adjust(Store cus)
+        {
+            var storeFind = await _context.Store
+                .FirstOrDefaultAsync(m => m.Id == cus.Id);
+
+            storeFind.Address = cus.Address;
+            storeFind.Name = cus.Name;
+            _context.Entry(storeFind).State = EntityState.Modified;
+            //_context.Update(store);
+            await _context.SaveChangesAsync();
+           
+            return RedirectToRoute("store");
+        }
         // GET: Stores/Details/5
         public async Task<IActionResult> Details(int? id)
         {

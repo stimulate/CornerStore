@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react'
 import { StoreList } from './StoreList'
 import { StoreForm } from './StoreForm'
-import { Confirm, Pagination, Icon } from 'semantic-ui-react'
+import { Pagination, Icon } from 'semantic-ui-react'
 import xmr from '../../service'
 
 
@@ -18,7 +18,7 @@ export class Store extends Component {
             searchString: '',
             totalPage: 1,
             delCheck: false,
-            store: []
+            medium: []
         }
 
         this.loadFromServer = this.loadFromServer.bind(this);
@@ -26,41 +26,30 @@ export class Store extends Component {
     }
     //update & read data
     async loadFromServer() {
-
-        //var url = this.props.url;     
-        //axios.get('/stores')
-        //    .then((response) =>{
-
-        //        this.setState({ data: response.data })
-        //        console.log(this.state.data)
-        //    })
-        //    .catch(function (error) {
-        //        console.log(error);
-        //    });
+        
         const res = await xmr.get('/store')
         await this.setState({
             data: res.data,
-            store: res.data
+            medium: res.data
         }, () => {
             this.setState({
                 totalPage: Math.ceil(this.state.data.length / 5) || 1
             }, () => { this.page(); })
         });
-
     };
 
     handleSubmit(store) {
 
         var data = new FormData();
         data.append('Name', store.name);
-        data.append('Phone', store.price);
+        data.append('Address', store.address);
 
         var xhr = new XMLHttpRequest();
 
         if (!this.state.editform) {
             var stores = this.state.data; //old data
             var newStore = stores.concat([store]); //old data + new obj
-            this.setState.data = newStore
+           // this.setState.data = newStore
             this.setState({ data: newStore }); //update old data
             xhr.open('post', "/store/new", true);
             xhr.onload = function () {
@@ -126,7 +115,7 @@ export class Store extends Component {
 
         this.setState({
             showform: true,
-            formProps2: cus.price,
+            formProps2: cus.address,
             formProps1: cus.name,
             editform: true,
             editId: cus.id,
@@ -136,7 +125,7 @@ export class Store extends Component {
     page = () => {
         setTimeout(() => {
             var cur = this.refs.pn.state.activePage;
-            var arr = this.state.store;
+            var arr = this.state.medium;
             if (arr.length > 5) {
                 var arr_filter = (cur == 1) ? arr.filter(c => arr.indexOf(c) < 5) : arr.filter(c => arr.indexOf(c) > (cur - 1) * 5 - 1 && arr.indexOf(c) < cur * 5)
                 this.setState({
@@ -171,7 +160,7 @@ export class Store extends Component {
                     firstItem={{ content: <Icon name='angle double left' />, icon: true }}
                     lastItem={{ content: <Icon name='angle double right' />, icon: true }}
                     prevItem={{ content: <Icon name='angle left' />, icon: true }}
-                    nextItem={{ content: <Icon name='angle right' />, icon: true }}
+                    nextItem={{ content: <Icon name='angle right'/>, icon: true }}
                     totalPages={this.state.totalPage}
                 />
             </div>

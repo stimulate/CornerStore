@@ -14,6 +14,9 @@ export class Sales extends Component {
             editform: false,
             formProps1: '',
             formProps2: '',
+            formProps3: '',
+            formProps4: '',
+            formProps5: '',
             editId: '',
             searchString: '',
             totalPage: 1,
@@ -38,22 +41,25 @@ export class Sales extends Component {
         //        console.log(error);
         //    });
         const res = await xmr.get('/sales')
-        await this.setState({
-            data: res.data,
-            store: res.data
-        }, () => {
-            this.setState({
-                totalPage: Math.ceil(this.state.data.length / 5) || 1
-            }, () => { this.page(); })
-        });
+        console.log(res);
+        //await this.setState({
+        //    data: res.data,
+        //    store: res.data
+        //}, () => {
+        //    this.setState({
+        //        totalPage: Math.ceil(this.state.data.length / 5) || 1
+        //    }, () => { this.page(); })
+        //});
 
     };
 
     handleSubmit(sales) {
 
         var data = new FormData();
-        data.append('Name', sales.name);
-        data.append('Phone', sales.price);
+        data.append('Date', sales.date);
+        data.append('CustomerID', sales.customer);
+        data.append('StaffID', sales.staff);
+        data.append('StoreID', sales.store);
 
         var xhr = new XMLHttpRequest();
 
@@ -98,6 +104,9 @@ export class Sales extends Component {
         this.setState({
             formProps1: '',
             formProps2: '',
+            formProps3: '',
+            formProps4: '',
+            formProps5: '',
             delCheck: false
         })
         this.loadFromServer()
@@ -126,8 +135,11 @@ export class Sales extends Component {
 
         this.setState({
             showform: true,
-            formProps2: cus.price,
-            formProps1: cus.name,
+            formProps2: cus.staff,
+            formProps1: cus.customer,
+            formProps3: cus.store,
+            formProps4: cus.date,
+            formProps5: cus.product,
             editform: true,
             editId: cus.id,
         })
@@ -155,7 +167,7 @@ export class Sales extends Component {
 
         return (
             <div className="sales">
-                <h1>Saless</h1>
+                <h1>Sales</h1>
 
                 <button onClick={this.show} className="ui item button purple">Create</button>
 

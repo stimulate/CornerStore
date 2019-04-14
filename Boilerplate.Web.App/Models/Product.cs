@@ -8,7 +8,7 @@ namespace Boilerplate.Web.App.Models
     {
         public Product()
         {
-            TransactionLine = new HashSet<TransactionLine>();
+            TransactionHead = new HashSet<TransactionHead>();
         }
 
         public int Id { get; set; }
@@ -19,6 +19,6 @@ namespace Boilerplate.Web.App.Models
         [Required(ErrorMessage = "Please enter a price")]
         public decimal Price { get; set; }
 
-        public ICollection<TransactionLine> TransactionLine { get; set; }
+        public ICollection<TransactionHead> TransactionHead { get; set; }
     }
 }

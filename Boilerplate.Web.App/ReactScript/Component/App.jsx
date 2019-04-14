@@ -28,16 +28,16 @@ export default class App extends Component {
                         <Link to="/">Home</Link>
                     </a>
                     <a className="item">
-                            <Link to='/product/index'>Product</Link>
+                            <Link to='/product'>Product</Link>
                     </a>
                     <a className="item">
-                            <Link to='/store/index'>Store</Link>
+                            <Link to='/store'>Store</Link>
                     </a>
                     <a className="item">
-                    <Link to='/sales/index'>Sales</Link>
+                    <Link to='/sales'>Sales</Link>
                     </a>
                     <a className="item">
-                        <Link to='/customer/index'>Customer</Link>
+                        <Link to='/customer'>Customer</Link>
                     </a>
                         
                         <div className="right menu">
@@ -53,10 +53,10 @@ export default class App extends Component {
             </div>
                     <div>                    
                     <Route exact path="/" component={Home} />
-                    <Route path='/product/index' component={Customer} />
-                    <Route path='/store/index' component={Store} />
-                    <Route path='/sales/index' component={Sales} />
-                    <Route path='/customer/index' component={Customer} />
+                    <Route path='/product' component={Product} />
+                    <Route path='/store' component={Store} />
+                    <Route path='/sales' component={Sales} />
+                    <Route path='/customer' component={Customer} />
                     </div>
                     </Router>
        

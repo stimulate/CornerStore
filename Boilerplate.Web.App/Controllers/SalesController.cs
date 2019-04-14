@@ -19,10 +19,53 @@ namespace Boilerplate.Web.App.Controllers
         }
 
         // GET: Sales
+        [HttpGet]
+        [Route("sales")]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Index()
         {
-            var sDJR1Context = _context.TransactionHead.Include(t => t.Customer).Include(t => t.Staff).Include(t => t.Store);
-            return View(await sDJR1Context.ToListAsync());
+            var sDJR1Context = _context.TransactionHead.Include(t => t.Customer).Include(t => t.Product).Include(t => t.Staff).Include(t => t.Store);
+            return Json(await sDJR1Context.ToListAsync());
+        }
+
+        [Route("sales/new")]
+        [HttpPost]
+        public async Task<ActionResult> Add(TransactionHead cus)
+        {
+            _context.Add(cus);
+            await _context.SaveChangesAsync();
+            return RedirectToRoute("sales");
+        }
+
+        [Route("sales/delete/{id}")]
+        [HttpDelete]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<ActionResult> Remove(int id)
+        {
+            var cus = await _context.TransactionHead.FindAsync(id);
+            _context.Remove(cus);
+            await _context.SaveChangesAsync();
+            return RedirectToRoute("sales");
+        }
+
+        [HttpPost]
+        [Route("sales/adjust/{id}")]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<IActionResult> adjust(TransactionHead cus)
+        {
+            var salesFind = await _context.TransactionHead
+                .FirstOrDefaultAsync(m => m.Id == cus.Id);
+
+            salesFind.StaffId = cus.StaffId;
+            salesFind.StoreId = cus.StoreId;
+            salesFind.Date = cus.Date;
+            salesFind.CustomerId = cus.CustomerId;
+            salesFind.ProductId = cus.ProductId;
+            _context.Entry(salesFind).State = EntityState.Modified;
+            //_context.Update(sales);
+            await _context.SaveChangesAsync();
+
+            return RedirectToRoute("sales");
         }
 
         // GET: Sales/Details/5
@@ -35,6 +78,7 @@ namespace Boilerplate.Web.App.Controllers
 
             var transactionHead = await _context.TransactionHead
                 .Include(t => t.Customer)
+                .Include(t => t.Product)
                 .Include(t => t.Staff)
                 .Include(t => t.Store)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -50,8 +94,9 @@ namespace Boilerplate.Web.App.Controllers
         public IActionResult Create()
         {
             ViewData["CustomerId"] = new SelectList(_context.Customer, "Id", "Address");
+            ViewData["ProductId"] = new SelectList(_context.Product, "Id", "Name");
             ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "Location");
-            ViewData["StoreId"] = new SelectList(_context.Store, "Id", "Name");
+            ViewData["StoreId"] = new SelectList(_context.Store, "Id", "Address");
             return View();
         }
 
@@ -60,7 +105,7 @@ namespace Boilerplate.Web.App.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CustomerId,StaffId,StoreId,Date")] TransactionHead transactionHead)
+        public async Task<IActionResult> Create([Bind("Id,CustomerId,StaffId,StoreId,ProductId,Date")] TransactionHead transactionHead)
         {
             if (ModelState.IsValid)
             {
@@ -69,8 +114,9 @@ namespace Boilerplate.Web.App.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CustomerId"] = new SelectList(_context.Customer, "Id", "Address", transactionHead.CustomerId);
+            ViewData["ProductId"] = new SelectList(_context.Product, "Id", "Name", transactionHead.ProductId);
             ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "Location", transactionHead.StaffId);
-            ViewData["StoreId"] = new SelectList(_context.Store, "Id", "Name", transactionHead.StoreId);
+            ViewData["StoreId"] = new SelectList(_context.Store, "Id", "Address", transactionHead.StoreId);
             return View(transactionHead);
         }
 
@@ -88,8 +134,9 @@ namespace Boilerplate.Web.App.Controllers
                 return NotFound();
             }
             ViewData["CustomerId"] = new SelectList(_context.Customer, "Id", "Address", transactionHead.CustomerId);
+            ViewData["ProductId"] = new SelectList(_context.Product, "Id", "Name", transactionHead.ProductId);
             ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "Location", transactionHead.StaffId);
-            ViewData["StoreId"] = new SelectList(_context.Store, "Id", "Name", transactionHead.StoreId);
+            ViewData["StoreId"] = new SelectList(_context.Store, "Id", "Address", transactionHead.StoreId);
             return View(transactionHead);
         }
 
@@ -98,7 +145,7 @@ namespace Boilerplate.Web.App.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CustomerId,StaffId,StoreId,Date")] TransactionHead transactionHead)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CustomerId,StaffId,StoreId,ProductId,Date")] TransactionHead transactionHead)
         {
             if (id != transactionHead.Id)
             {
@@ -126,8 +173,9 @@ namespace Boilerplate.Web.App.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CustomerId"] = new SelectList(_context.Customer, "Id", "Address", transactionHead.CustomerId);
+            ViewData["ProductId"] = new SelectList(_context.Product, "Id", "Name", transactionHead.ProductId);
             ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "Location", transactionHead.StaffId);
-            ViewData["StoreId"] = new SelectList(_context.Store, "Id", "Name", transactionHead.StoreId);
+            ViewData["StoreId"] = new SelectList(_context.Store, "Id", "Address", transactionHead.StoreId);
             return View(transactionHead);
         }
 
@@ -141,6 +189,7 @@ namespace Boilerplate.Web.App.Controllers
 
             var transactionHead = await _context.TransactionHead
                 .Include(t => t.Customer)
+                .Include(t => t.Product)
                 .Include(t => t.Staff)
                 .Include(t => t.Store)
                 .FirstOrDefaultAsync(m => m.Id == id);

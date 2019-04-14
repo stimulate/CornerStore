@@ -32,8 +32,11 @@ export class SalesList extends Component {
 
                 <Table.Row key={d.id}>
                     <Table.Cell >{d.id}</Table.Cell>
-                    <Table.Cell >{d.name}</Table.Cell>
-                    <Table.Cell >{d.price}</Table.Cell>
+                    <Table.Cell >{d.TransactionLine.Product.Name}</Table.Cell>
+                    <Table.Cell >{d.Customer.Name}</Table.Cell>
+                    <Table.Cell >{d.Store.Name}</Table.Cell>
+                    <Table.Cell >{d.Staff.Name}</Table.Cell>
+                    <Table.Cell >{d.Date}</Table.Cell>
                     <Table.Cell>
                         <Button floated='right' primary onClick={(e) => this.props.cus.edit(d, e)} >Edit</Button>
                         <Button floated='right' color='pink' onClick={this.props.cus.delConfirm}>Delete</Button>
@@ -59,8 +62,11 @@ export class SalesList extends Component {
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>ID</Table.HeaderCell>
-                            <Table.HeaderCell>Name</Table.HeaderCell>
-                            <Table.HeaderCell>Price</Table.HeaderCell>
+                            <Table.HeaderCell>Product</Table.HeaderCell>
+                            <Table.HeaderCell>Customer</Table.HeaderCell>
+                            <Table.HeaderCell>Store</Table.HeaderCell>
+                            <Table.HeaderCell>Staff</Table.HeaderCell>
+                            <Table.HeaderCell>Date</Table.HeaderCell>
                             <Table.HeaderCell></Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>

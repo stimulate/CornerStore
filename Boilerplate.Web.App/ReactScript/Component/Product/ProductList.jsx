@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react'
-import { Table, Button } from 'semantic-ui-react'
+import { Confirm, Table, Button } from 'semantic-ui-react'
 
 
 export class ProductList extends Component {

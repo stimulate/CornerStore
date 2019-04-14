@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react'
-import { Table, Button } from 'semantic-ui-react'
+import { Confirm, Table, Button } from 'semantic-ui-react'
 
 
 export class StoreList extends Component {
@@ -28,12 +28,12 @@ export class StoreList extends Component {
 
         const cusNodes = this.props.cus.state.data.map(
 
-            (d) => (
+            (d) => 
 
                 <Table.Row key={d.id}>
                     <Table.Cell >{d.id}</Table.Cell>
                     <Table.Cell >{d.name}</Table.Cell>
-                    <Table.Cell >{d.price}</Table.Cell>
+                    <Table.Cell >{d.address}</Table.Cell>
                     <Table.Cell>
                         <Button floated='right' primary onClick={(e) => this.props.cus.edit(d, e)} >Edit</Button>
                         <Button floated='right' color='pink' onClick={this.props.cus.delConfirm}>Delete</Button>
@@ -41,7 +41,7 @@ export class StoreList extends Component {
 
                     </Table.Cell>
                 </Table.Row>
-            )
+            
         )
 
         return (
@@ -60,7 +60,7 @@ export class StoreList extends Component {
                         <Table.Row>
                             <Table.HeaderCell>ID</Table.HeaderCell>
                             <Table.HeaderCell>Name</Table.HeaderCell>
-                            <Table.HeaderCell>Price</Table.HeaderCell>
+                            <Table.HeaderCell>Address</Table.HeaderCell>
                             <Table.HeaderCell></Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>

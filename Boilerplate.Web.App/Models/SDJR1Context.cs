@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -21,8 +22,7 @@ namespace Boilerplate.Web.App.Models
         public virtual DbSet<Staff> Staff { get; set; }
         public virtual DbSet<StaffAssignment> StaffAssignment { get; set; }
         public virtual DbSet<Store> Store { get; set; }
-        public virtual DbSet<TransactionHead> TransactionHead { get; set; }
-        public virtual DbSet<TransactionLine> TransactionLine { get; set; }
+        public virtual DbSet<TransactionHead> TransactionHead { get; set; }        
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -127,7 +127,7 @@ namespace Boilerplate.Web.App.Models
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
-                entity.Property(e => e.Name)
+                entity.Property(e => e.Address)
                     .IsRequired()
                     .HasMaxLength(255)
                     .IsUnicode(false);
@@ -144,6 +144,8 @@ namespace Boilerplate.Web.App.Models
                 entity.Property(e => e.StaffId).HasColumnName("StaffID");
 
                 entity.Property(e => e.StoreId).HasColumnName("StoreID");
+
+                entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.TransactionHead)
@@ -162,28 +164,12 @@ namespace Boilerplate.Web.App.Models
                     .HasForeignKey(d => d.StoreId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TransactionHead_Store");
-            });
-
-            modelBuilder.Entity<TransactionLine>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.HeadId).HasColumnName("HeadID");
-
-                entity.Property(e => e.ProductId).HasColumnName("ProductID");
-
-                entity.HasOne(d => d.Head)
-                    .WithMany(p => p.TransactionLine)
-                    .HasForeignKey(d => d.HeadId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TransactionLine_TransactionHead");
-
                 entity.HasOne(d => d.Product)
-                    .WithMany(p => p.TransactionLine)
+                    .WithMany(p => p.TransactionHead)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TransactionLine_Product");
-            });
+                    .HasConstraintName("FK_TransactionHead_Product");
+            });           
         }
     }
 }

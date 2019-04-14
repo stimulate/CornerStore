@@ -52,15 +52,15 @@ export class Product extends Component {
     handleSubmit(product) {
 
         var data = new FormData();
-        data.append('Name', product.name);
-        data.append('Phone', product.price);
+        data.append('name', product.name);
+        data.append('price', product.price);
       
         var xhr = new XMLHttpRequest();
 
         if (!this.state.editform) {
             var products = this.state.data; //old data
             var newProduct = products.concat([product]); //old data + new obj
-            this.setState.data = newProduct
+           // this.setState.data = newProduct
             this.setState({ data: newProduct }); //update old data
             xhr.open('post', "/product/new", true);
             xhr.onload = function () {
@@ -68,7 +68,6 @@ export class Product extends Component {
                 this.loadFromServer;
             };
             xhr.send(data);
-
         }
         else {
             var d = parseInt(this.state.editId);

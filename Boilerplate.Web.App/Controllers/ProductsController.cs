@@ -62,23 +62,7 @@ namespace Boilerplate.Web.App.Controllers
             _context.Entry(productFind).State = EntityState.Modified;
             //_context.Update(product);
             await _context.SaveChangesAsync();
-
-            //try
-            //{
-            //    _context.Update(product);
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!CustomerExists(product.Id))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
+                        
             return RedirectToRoute("product");
         }
 
