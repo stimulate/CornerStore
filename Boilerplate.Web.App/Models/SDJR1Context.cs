@@ -139,7 +139,11 @@ namespace Boilerplate.Web.App.Models
 
                 entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
 
-                entity.Property(e => e.Date).HasColumnType("date");
+                //entity.Property(e => e.Date).HasColumnType("date");
+                entity.Property(e => e.Date)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.StaffId).HasColumnName("StaffID");
 

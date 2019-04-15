@@ -12,7 +12,10 @@ namespace Boilerplate.Web.App.Controllers
     public class SalesController : Controller
     {
         private readonly SDJR1Context _context;
-
+        private Dictionary<int, String> stafflist = new Dictionary<int, String>();
+        private Dictionary<int, String> cuslist = new Dictionary<int, String>();
+        private Dictionary<int, String> prolist = new Dictionary<int, String>();
+        private Dictionary<int, String> storelist = new Dictionary<int, String>();
         public SalesController(SDJR1Context context)
         {
             _context = context;
@@ -25,7 +28,48 @@ namespace Boilerplate.Web.App.Controllers
         public async Task<IActionResult> Index()
         {
             var sDJR1Context = _context.TransactionHead.Include(t => t.Customer).Include(t => t.Product).Include(t => t.Staff).Include(t => t.Store);
-            return Json(await sDJR1Context.ToListAsync());
+            var sales = sDJR1Context.Select(x => new
+            {
+                ID = x.Id,
+                Product = x.Product.Name,
+                Date = x.Date,
+                Customer = x.Customer.Name,
+                Store = x.Store.Name,
+                Staff = x.Staff.Name
+            });
+            return Json(await sales.ToListAsync());
+        }
+
+        // GET: Related data
+        [HttpGet]
+        [Route("sales/data")]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<IActionResult> Data()
+        {
+            var staff = _context.Staff.Select(s => new { id = s.Id, name = s.Name }).ToList();
+            foreach(var s in staff)
+            {
+                stafflist[s.id] = s.name;
+            }
+            var store = _context.Store.Select(s => new { id = s.Id, name = s.Name }).ToList();
+            foreach (var s in store)
+            {
+                storelist[s.id] = s.name;
+            }
+            var pro = _context.Product.Select(s => new { id = s.Id, name = s.Name }).ToList();
+            foreach (var s in pro)
+            {
+                prolist[s.id] = s.name;
+            }
+            var cus = _context.Customer.Select(s => new { id = s.Id, name = s.Name }).ToList();
+            foreach (var s in cus)
+            {
+                cuslist[s.id] = s.name;
+            }
+            
+            Dictionary<int, String>[] list = { stafflist, storelist, prolist, cuslist };
+
+            return Json(list);
         }
 
         [Route("sales/new")]

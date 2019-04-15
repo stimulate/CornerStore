@@ -63,7 +63,7 @@ export default class App extends Component {
         <span></span>
             
             <div>
-       
+                
             </div>
 
             <footer className="ui footer purple"> <span>&emsp;&emsp;<i className="copyright outline icon"></i>

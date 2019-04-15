@@ -15,7 +15,7 @@ namespace Boilerplate.Web.App.Models
         public int ProductId { get; set; }
      
         [Required]
-        public DateTime Date { get; set; }
+        public String Date { get; set; }
 
         public Customer Customer { get; set; }
         public Staff Staff { get; set; }

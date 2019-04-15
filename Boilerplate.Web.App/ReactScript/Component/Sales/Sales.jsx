@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react'
 import { SalesList } from './SalesList'
 import { SalesForm } from './SalesForm'
-import { Confirm, Pagination, Icon } from 'semantic-ui-react'
+import { Pagination, Icon } from 'semantic-ui-react'
 import xmr from '../../service'
 
 
@@ -21,7 +21,8 @@ export class Sales extends Component {
             searchString: '',
             totalPage: 1,
             delCheck: false,
-            store: []
+            store: [],
+            list:[],
         }
 
         this.loadFromServer = this.loadFromServer.bind(this);
@@ -40,23 +41,28 @@ export class Sales extends Component {
         //    .catch(function (error) {
         //        console.log(error);
         //    });
-        const res = await xmr.get('/sales')
-        console.log(res);
-        //await this.setState({
-        //    data: res.data,
-        //    store: res.data
-        //}, () => {
-        //    this.setState({
-        //        totalPage: Math.ceil(this.state.data.length / 5) || 1
-        //    }, () => { this.page(); })
-        //});
-
+        const res = await xmr.get('/sales');
+        const res2 = await xmr.get('/sales/data');   
+        
+        await this.setState({
+            data: res.data,
+            store: res.data,
+            list: res2.data
+        }, () => {
+            this.setState({
+                totalPage: Math.ceil(this.state.data.length / 5) || 1
+            }, () => {
+                this.page();                               
+            })
+            }); 
+//        console.log();
     };
 
     handleSubmit(sales) {
 
         var data = new FormData();
         data.append('Date', sales.date);
+        data.append('ProductID', sales.product);
         data.append('CustomerID', sales.customer);
         data.append('StaffID', sales.staff);
         data.append('StoreID', sales.store);
@@ -91,8 +97,7 @@ export class Sales extends Component {
     };
 
     componentDidMount() {
-        this.loadFromServer();
-        console.log(this.state.totalPage)
+        this.loadFromServer();       
     }
 
     show = () => {
@@ -142,7 +147,7 @@ export class Sales extends Component {
             formProps5: cus.product,
             editform: true,
             editId: cus.id,
-        })
+        })       
     }
 
     page = () => {

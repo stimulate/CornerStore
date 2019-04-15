@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react'
 import { Table, Button } from 'semantic-ui-react'
-
+import { Confirm } from 'semantic-ui-react'
 
 export class SalesList extends Component {
     constructor(props) {
@@ -16,7 +16,7 @@ export class SalesList extends Component {
     handleSearchSubmit = (e) => {
         e.preventDefault();
         this.props.cus.setState({
-            data: this.props.cus.state.data.filter(cus => cus.name.includes(this.props.cus.state.searchString)),
+            data: this.props.cus.state.data.filter(cus => cus.product.includes(this.props.cus.state.searchString)),
         });
         this.props.cus.setState({
             searchString: '',
@@ -32,11 +32,11 @@ export class SalesList extends Component {
 
                 <Table.Row key={d.id}>
                     <Table.Cell >{d.id}</Table.Cell>
-                    <Table.Cell >{d.TransactionLine.Product.Name}</Table.Cell>
-                    <Table.Cell >{d.Customer.Name}</Table.Cell>
-                    <Table.Cell >{d.Store.Name}</Table.Cell>
-                    <Table.Cell >{d.Staff.Name}</Table.Cell>
-                    <Table.Cell >{d.Date}</Table.Cell>
+                    <Table.Cell >{d.product}</Table.Cell>
+                    <Table.Cell >{d.customer}</Table.Cell>
+                    <Table.Cell >{d.store}</Table.Cell>
+                    <Table.Cell >{d.staff}</Table.Cell>
+                    <Table.Cell >{d.date}</Table.Cell>
                     <Table.Cell>
                         <Button floated='right' primary onClick={(e) => this.props.cus.edit(d, e)} >Edit</Button>
                         <Button floated='right' color='pink' onClick={this.props.cus.delConfirm}>Delete</Button>
@@ -51,7 +51,7 @@ export class SalesList extends Component {
 
             <div className="salesList">
                 <div className="ui input menu floated right">
-                    <input type="text" placeholder="Search by Name" onChange={this.handleSearchChange} />
+                    <input type="text" placeholder="Search by Product Name" onChange={this.handleSearchChange} />
                     <i className="search large icon purple" onClick={this.handleSearchSubmit} ></i>
 
                     <button className="ui button blue" onClick={this.props.cus.loadFromServer} >Back to the full list</button>
